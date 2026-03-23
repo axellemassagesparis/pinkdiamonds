@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PINK DIAMOND – Massage de Luxe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600;700&family=Montserrat:wght@200;300;400&display=swap');
+
+:root {
+  --rose: #e8628a;
+  --rose2: #c2185b;
+  --rose3: #f9c8d9;
+  --noir: #050505;
+  --blanc: #fff8fc;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--noir);
+  color: var(--blanc);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CURSOR */
+.cursor { width:10px; height:10px; background:var(--rose); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9999; transform:translate(-50%,-50%); transition:transform .15s; box-shadow:0 0 15px var(--rose); }
+.cursor-ring { width:34px; height:34px; border:1px solid rgba(232,98,138,.5); border-radius:50%; position:fixed; top:0; left:0; pointer-events:none; z-index:9998; transform:translate(-50%,-50%); transition:all .18s; }
+
+/* CANVAS */
+#gc { position:fixed; inset:0; pointer-events:none; z-index:0; opacity:.35; }
+
+/* NAV */
+nav {
+  position:fixed; top:0; width:100%; z-index:200;
+  padding:20px 50px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(to bottom,rgba(5,5,5,.97),transparent);
+}
+.nav-logo {
+  font-family:'Cinzel',serif; font-size:1.4rem; font-weight:700; letter-spacing:.3em;
+  background:linear-gradient(90deg,var(--rose3),var(--rose),#fff,var(--rose2));
+  background-size:300%; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation:shim 4s linear infinite;
+}
+@keyframes shim { 0%{background-position:0%} 100%{background-position:300%} }
+
+.nav-links { display:flex; gap:36px; list-style:none; }
+.nav-links a { color:rgba(255,255,255,.65); text-decoration:none; font-size:.68rem; letter-spacing:.22em; text-transform:uppercase; transition:color .3s; }
+.nav-links a:hover { color:var(--rose); }
+.nav-cta { border:1px solid var(--rose) !important; color:var(--rose) !important; padding:9px 22px; border-radius:30px; transition:all .3s !important; }
+.nav-cta:hover { background:var(--rose) !important; color:#fff !important; }
+
+/* HERO */
+.hero {
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:130px 30px 80px; position:relative; overflow:hidden; z-index:1;
+}
+.hero-bg {
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 50%,rgba(194,24,91,.18) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 20%,rgba(232,98,138,.13) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 80%,rgba(194,24,91,.09) 0%,transparent 40%);
+}
+.ring { position:absolute; border-radius:50%; border:1px solid rgba(232,98,138,.14); animation:pulse 6s ease-in-out infinite; }
+.ring:nth-child(1){width:380px;height:380px;}
+.ring:nth-child(2){width:620px;height:620px;animation-delay:2s;opacity:.6;}
+.ring:nth-child(3){width:870px;height:870px;animation-delay:4s;opacity:.3;}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.05);opacity:.6}}
+
+.hero-pre { font-size:.62rem; letter-spacing:.5em; text-transform:uppercase; color:var(--rose); margin-bottom:18px; opacity:0; animation:fadeup 1s .5s forwards; }
+.hero-title { font-family:'Cinzel',serif; font-size:clamp(3.5rem,11vw,8.5rem); font-weight:700; line-height:.92; letter-spacing:.05em; margin-bottom:6px; opacity:0; animation:fadeup 1s .8s forwards; }
+.t-pink { background:linear-gradient(135deg,#ff80ab,var(--rose),var(--rose3),#ff4081,#fff,var(--rose)); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:shim2 5s linear infinite; }
+.t-dia { background:linear-gradient(135deg,#fff,var(--rose3),#fff,var(--rose),#fff); background-size:200%; -webkit-background-clip:text; -webkit-text-fill-color:transparent; animation:shim2 5s linear infinite reverse; display:block; }
+@keyframes shim2{0%{background-position:-200% center}100%{background-position:200% center}}
+.hero-sub { font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,2.2vw,1.45rem); font-style:italic; color:rgba(255,255,255,.55); letter-spacing:.1em; margin:22px 0 46px; opacity:0; animation:fadeup 1s 1.1s forwards; }
+.hero-btns { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; opacity:0; animation:fadeup 1s 1.4s forwards; }
+@keyframes fadeup{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
+
+.btn-p {
+  padding:17px 44px; background:linear-gradient(135deg,var(--rose),var(--rose2)); color:#fff; border:none;
+  border-radius:50px; font-family:'Montserrat',sans-serif; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase;
+  cursor:pointer; transition:all .3s; text-decoration:none; display:inline-block;
+  box-shadow:0 10px 36px rgba(232,98,138,.4);
+}
+.btn-p:hover { transform:translateY(-3px); box-shadow:0 18px 55px rgba(232,98,138,.6); }
+.btn-s {
+  padding:17px 44px; background:transparent; color:var(--rose3); border:1px solid rgba(232,98,138,.4);
+  border-radius:50px; font-family:'Montserrat',sans-serif; font-size:.68rem; letter-spacing:.28em; text-transform:uppercase;
+  cursor:pointer; transition:all .3s; text-decoration:none; display:inline-block;
+}
+.btn-s:hover { border-color:var(--rose); color:var(--rose); transform:translateY(-3px); }
+
+.scroll-ind { position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0; animation:fadeup 1s 2s forwards; z-index:2; }
+.scroll-line { width:1px; height:55px; background:linear-gradient(to bottom,var(--rose),transparent); animation:sc 2s ease-in-out infinite; }
+@keyframes sc{0%,100%{opacity:1}50%{opacity:.3}}
+.scroll-txt { font-size:.52rem; letter-spacing:.4em; color:rgba(255,255,255,.25); text-transform:uppercase; }
+
+/* DIVIDER */
+.div-line { width:100%; height:1px; background:linear-gradient(to right,transparent,var(--rose),transparent); position:relative; }
+.div-line::before { content:'◆'; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); color:var(--rose); font-size:.75rem; background:var(--noir); padding:0 14px; }
+
+/* SECTION GENERALS */
+.s-label { font-size:.58rem; letter-spacing:.5em; text-transform:uppercase; color:var(--rose); text-align:center; margin-bottom:14px; }
+.s-title { font-family:'Cinzel',serif; font-size:clamp(1.8rem,4.5vw,3.2rem); text-align:center; font-weight:400; letter-spacing:.05em; color:var(--blanc); margin-bottom:14px; }
+.s-sub { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-style:italic; color:rgba(255,255,255,.45); text-align:center; max-width:480px; margin:0 auto 60px; line-height:1.8; }
+
+.reveal { opacity:0; transform:translateY(35px); transition:all .8s cubic-bezier(.23,1,.32,1); }
+.reveal.vis { opacity:1; transform:none; }
+
+/* SERVICES */
+.sec { padding:100px 50px; position:relative; z-index:1; }
+.services-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2px; max-width:1160px; margin:0 auto; }
+.s-card {
+  background:linear-gradient(135deg,rgba(28,10,18,.92),rgba(13,4,9,.97));
+  border:1px solid rgba(232,98,138,.11); padding:46px 36px; position:relative; overflow:hidden;
+  transition:all .45s cubic-bezier(.23,1,.32,1);
+}
+.s-card::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(to right,transparent,var(--rose),transparent); transform:scaleX(0); transition:transform .4s; }
+.s-card:hover { transform:translateY(-7px); border-color:rgba(232,98,138,.28); box-shadow:0 20px 50px rgba(232,98,138,.08); }
+.s-card:hover::after { transform:scaleX(1); }
+.s-icon { font-size:1.9rem; margin-bottom:20px; display:block; }
+.s-name { font-family:'Cinzel',serif; font-size:.95rem; letter-spacing:.14em; color:var(--rose3); margin-bottom:14px; }
+.s-desc { font-size:.76rem; line-height:1.8; color:rgba(255,255,255,.48); margin-bottom:26px; }
+.s-price { font-family:'Cormorant Garamond',serif; font-size:1.5rem; color:var(--rose); font-weight:600; }
+.s-dur { font-size:.62rem; letter-spacing:.18em; color:rgba(255,255,255,.28); text-transform:uppercase; margin-top:4px; }
+.badge { position:absolute; top:20px; right:20px; background:linear-gradient(135deg,var(--rose),var(--rose2)); color:#fff; font-size:.52rem; letter-spacing:.18em; text-transform:uppercase; padding:5px 12px; border-radius:20px; }
+
+/* EXPERIENCE */
+.exp-layout { max-width:1060px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:70px; align-items:center; }
+.exp-diamond {
+  width:280px; height:280px; margin:0 auto;
+  background:linear-gradient(135deg,rgba(232,98,138,.14),rgba(194,24,91,.07),rgba(255,128,171,.11));
+  transform:rotate(45deg); border:1px solid rgba(232,98,138,.18);
+  box-shadow:0 0 55px rgba(232,98,138,.09),inset 0 0 55px rgba(232,98,138,.04);
+  position:relative;
+}
+.exp-diamond::before,.exp-diamond::after { content:''; position:absolute; inset:14px; border:1px solid rgba(232,98,138,.12); }
+.exp-diamond::after { inset:28px; }
+.exp-num { font-family:'Cinzel',serif; font-size:4.5rem; font-weight:700; background:linear-gradient(135deg,var(--rose),var(--rose3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
+.exp-lbl { font-size:.62rem; letter-spacing:.28em; text-transform:uppercase; color:rgba(255,255,255,.35); margin-bottom:36px; padding-bottom:36px; border-bottom:1px solid rgba(232,98,138,.13); }
+.exp-feat { display:flex; align-items:flex-start; gap:18px; margin-bottom:28px; }
+.exp-ico { width:42px; height:42px; border:1px solid rgba(232,98,138,.28); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; color:var(--rose); background:rgba(232,98,138,.04); min-width:42px; }
+.exp-ft { font-family:'Cinzel',serif; font-size:.82rem; color:var(--rose3); margin-bottom:5px; letter-spacing:.09em; }
+.exp-fd { font-size:.73rem; color:rgba(255,255,255,.42); line-height:1.7; }
+
+/* TARIFS */
+.tarifs-grid { max-width:960px; margin:0 auto; display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.t-card { border:1px solid rgba(232,98,138,.14); padding:46px 28px; text-align:center; position:relative; transition:all .4s; background:rgba(13,4,9,.6); }
+.t-card.feat { border-color:var(--rose); background:linear-gradient(to bottom,rgba(232,98,138,.07),rgba(194,24,91,.03)); transform:scale(1.04); }
+.t-card:hover:not(.feat) { border-color:rgba(232,98,138,.38); transform:translateY(-5px); }
+.t-badge { position:absolute; top:-13px; left:50%; transform:translateX(-50%); background:linear-gradient(135deg,var(--rose),var(--rose2)); color:#fff; font-size:.58rem; letter-spacing:.18em; text-transform:uppercase; padding:5px 18px; border-radius:20px; white-space:nowrap; }
+.t-name { font-family:'Cinzel',serif; font-size:.95rem; letter-spacing:.14em; color:var(--rose3); margin-bottom:26px; }
+.t-price { font-family:'Cinzel',serif; font-size:2.8rem; font-weight:700; background:linear-gradient(135deg,var(--rose),var(--rose3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; line-height:1; }
+.t-unit { font-size:.62rem; color:rgba(255,255,255,.28); letter-spacing:.18em; margin-bottom:26px; text-transform:uppercase; }
+.t-feats { list-style:none; margin-bottom:36px; border-top:1px solid rgba(232,98,138,.09); padding-top:26px; }
+.t-feats li { font-size:.73rem; color:rgba(255,255,255,.45); padding:9px 0; border-bottom:1px solid rgba(255,255,255,.03); display:flex; align-items:center; gap:9px; justify-content:center; }
+.t-feats li::before { content:'✦'; color:var(--rose); font-size:.48rem; }
+
+/* TESTIMONIALS */
+.testi-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; max-width:1100px; margin:0 auto; }
+.testi-card { background:rgba(18,6,12,.8); border:1px solid rgba(232,98,138,.11); padding:40px; transition:all .4s; }
+.testi-card:hover { border-color:rgba(232,98,138,.28); transform:translateY(-4px); }
+.testi-q { font-family:'Cormorant Garamond',serif; font-size:3.5rem; color:var(--rose); line-height:0; margin-bottom:14px; opacity:.38; }
+.testi-txt { font-family:'Cormorant Garamond',serif; font-size:1.05rem; font-style:italic; line-height:1.8; color:rgba(255,255,255,.6); margin-bottom:24px; }
+.testi-stars { color:var(--rose); font-size:.75rem; letter-spacing:4px; margin-bottom:14px; }
+.testi-auth { font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--rose3); }
+
+/* CONTACT BLOCK */
+.contact-block { max-width:800px; margin:0 auto 60px; display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.c-item { border:1px solid rgba(232,98,138,.16); padding:30px 24px; text-align:center; transition:all .3s; background:rgba(13,4,9,.5); }
+.c-item:hover { border-color:var(--rose); transform:translateY(-4px); }
+.c-emoji { font-size:1.8rem; margin-bottom:12px; display:block; }
+.c-label { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.2em; color:var(--rose3); margin-bottom:8px; text-transform:uppercase; }
+.c-val { font-size:.78rem; color:rgba(255,255,255,.55); line-height:1.6; }
+.c-val a { color:var(--rose); text-decoration:none; transition:color .3s; }
+.c-val a:hover { color:var(--rose3); }
+
+/* RESERVATION */
+.res-inner {
+  max-width:680px; margin:0 auto; border:1px solid rgba(232,98,138,.2); padding:60px;
+  text-align:center; position:relative; background:rgba(13,4,9,.82);
+}
+.res-inner::before,.res-inner::after { content:'✦'; position:absolute; color:var(--rose); font-size:.9rem; }
+.res-inner::before { top:18px; left:26px; }
+.res-inner::after { bottom:18px; right:26px; }
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:36px 0; }
+.full { grid-column:1/-1; }
+.fi, .fs, .ft {
+  width:100%; background:rgba(232,98,138,.04); border:1px solid rgba(232,98,138,.14); color:var(--blanc);
+  padding:14px 18px; font-family:'Montserrat',sans-serif; font-size:.73rem; font-weight:300; letter-spacing:.05em; outline:none; transition:all .3s;
+}
+.fi:focus,.fs:focus,.ft:focus { border-color:var(--rose); background:rgba(232,98,138,.07); box-shadow:0 0 18px rgba(232,98,138,.09); }
+.fi::placeholder,.ft::placeholder { color:rgba(255,255,255,.22); }
+.fs option { background:#120408; color:var(--blanc); }
+.ft { resize:vertical; min-height:90px; }
+
+/* FOOTER */
+footer { position:relative; z-index:1; border-top:1px solid rgba(232,98,138,.09); padding:55px 50px; }
+.footer-inner { max-width:1060px; margin:0 auto; display:grid; grid-template-columns:1.6fr 1fr 1fr 1fr; gap:50px; }
+.f-logo { font-family:'Cinzel',serif; font-size:1.3rem; font-weight:700; background:linear-gradient(135deg,var(--rose3),var(--rose)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:14px; }
+.f-tag { font-family:'Cormorant Garamond',serif; font-size:.92rem; font-style:italic; color:rgba(255,255,255,.32); line-height:1.8; margin-bottom:24px; }
+.f-social { display:flex; gap:10px; }
+.f-soc { width:36px; height:36px; border:1px solid rgba(232,98,138,.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.85rem; color:rgba(255,255,255,.35); text-decoration:none; transition:all .3s; }
+.f-soc:hover { border-color:var(--rose); color:var(--rose); box-shadow:0 0 14px rgba(232,98,138,.28); }
+.f-col-title { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.2em; color:var(--rose3); margin-bottom:22px; }
+.f-links { list-style:none; }
+.f-links li { margin-bottom:10px; }
+.f-links a { font-size:.72rem; color:rgba(255,255,255,.32); text-decoration:none; transition:color .3s; }
+.f-links a:hover { color:var(--rose); }
+.f-bot { max-width:1060px; margin:36px auto 0; padding-top:26px; border-top:1px solid rgba(255,255,255,.04); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+.f-bot-txt { font-size:.62rem; color:rgba(255,255,255,.18); letter-spacing:.09em; }
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav { padding:18px 22px; }
+  .nav-links { display:none; }
+  .sec { padding:70px 22px; }
+  .exp-layout { grid-template-columns:1fr; gap:36px; }
+  .exp-diamond { width:200px; height:200px; }
+  .tarifs-grid { grid-template-columns:1fr; }
+  .t-card.feat { transform:none; }
+  .testi-grid { grid-template-columns:1fr; }
+  .contact-block { grid-template-columns:1fr; }
+  .res-inner { padding:36px 22px; }
+  .form-grid { grid-template-columns:1fr; }
+  .footer-inner { grid-template-columns:1fr 1fr; gap:36px; }
+  .f-bot { flex-direction:column; text-align:center; }
+}
+@media(max-width:500px){
+  .footer-inner { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="gc"></canvas>
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="cur-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">PINK DIAMOND</div>
+  <ul class="nav-links">
+    <li><a href="#services">Soins</a></li>
+    <li><a href="#experience">Expérience</a></li>
+    <li><a href="#tarifs">Tarifs</a></li>
+    <li><a href="#avis">Avis</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="#reservation" class="nav-cta">Réserver</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg">
+    <div class="ring"></div>
+    <div class="ring"></div>
+    <div class="ring"></div>
+  </div>
+  <div style="position:relative;z-index:2;">
+    <p class="hero-pre">✦ Institut de Massage de Luxe ✦</p>
+    <h1 class="hero-title">
+      <span class="t-pink">PINK</span>
+      <span class="t-dia">DIAMOND</span>
+    </h1>
+    <p class="hero-sub">L'art du massage, sublimé en rituel de beauté</p>
+    <div class="hero-btns">
+      <a href="#reservation" class="btn-p">Réserver votre soin</a>
+      <a href="#services" class="btn-s">Découvrir les soins</a>
+    </div>
+  </div>
+  <div class="scroll-ind">
+    <div class="scroll-line"></div>
+    <span class="scroll-txt">Découvrir</span>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- SERVICES -->
+<section class="sec" id="services">
+  <div class="reveal">
+    <p class="s-label">✦ Nos Soins Signature ✦</p>
+    <h2 class="s-title">Rituels d'Exception</h2>
+    <p class="s-sub">Chaque soin est une invitation au voyage sensoriel, conçu pour éveiller vos sens et sublimer votre corps.</p>
+  </div>
+  <div class="services-grid reveal">
+    <div class="s-card">
+      <span class="s-icon">🌸</span>
+      <div class="s-name">Massage Californien</div>
+      <p class="s-desc">Une approche globale qui élimine anxiété, tensions et stress. Agit sur l'esprit, le corps et les émotions pour une renaissance totale.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="badge">Bestseller</span>
+      <span class="s-icon">💎</span>
+      <div class="s-name">Massage Suédois</div>
+      <p class="s-desc">Massage dynamique et raffermissant. Son effet tonifiant favorise la circulation sanguine et l'élimination des toxines pour un soulagement immédiat.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="s-icon">✨</span>
+      <div class="s-name">Massage Shiatsu</div>
+      <p class="s-desc">Pressions, lissages et étirements au niveau des points réflexes. Procure une grande détente, un apaisement profond et supprime la fatigue.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="s-icon">🎋</span>
+      <div class="s-name">Massage aux Bambous</div>
+      <p class="s-desc">Massage deep tissue permettant une décontraction musculaire profonde du dos et des jambes. Élimine les tensions les plus ancrées.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="s-icon">🔥</span>
+      <div class="s-name">Massage aux Pierres Chaudes</div>
+      <p class="s-desc">Pierres volcaniques chauffées à 50° pour drainer, évacuer les toxines et les tensions musculaires. Une grande détente assurée.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="badge">Exclusif</span>
+      <span class="s-icon">🌺</span>
+      <div class="s-name">Multi Modelage Relaxation</div>
+      <p class="s-desc">Du sur-mesure pour une relaxation optimale en mixant Shiatsu, Suédois, Californien et Réflexologie selon vos besoins du moment.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="s-icon">🤰</span>
+      <div class="s-name">Massage Prénatal</div>
+      <p class="s-desc">Diminue les tensions physiques et psychologiques liées à la grossesse. En position latérale pour le plus grand confort. Dès le 3ème mois.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+    <div class="s-card">
+      <span class="s-icon">💫</span>
+      <div class="s-name">Réflexologie</div>
+      <p class="s-desc">Rééquilibre les énergies pour combattre le stress, la fatigue et les tensions. Favorise la détente, la bonne circulation et l'élimination des toxines.</p>
+      <div class="s-price">75 €</div>
+      <div class="s-dur">1h &nbsp;·&nbsp; 115€ 1h30 &nbsp;·&nbsp; 150€ 2h</div>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- EXPERIENCE -->
+<section class="sec" id="experience" style="background:linear-gradient(to bottom,transparent,rgba(194,24,91,.04),transparent);">
+  <div class="reveal">
+    <p class="s-label">✦ Notre Promesse ✦</p>
+    <h2 class="s-title">L'Expérience Pink Diamond</h2>
+    <p class="s-sub">Un sanctuaire de bien-être où chaque détail est pensé pour votre plaisir absolu.</p>
+  </div>
+  <div class="exp-layout reveal">
+    <div style="display:flex;justify-content:center;align-items:center;">
+      <div class="exp-diamond"></div>
+    </div>
+    <div>
+      <div class="exp-num">100%</div>
+      <div class="exp-lbl">Satisfaction garantie</div>
+      <div class="exp-feat">
+        <div class="exp-ico">💎</div>
+        <div>
+          <div class="exp-ft">Huiles Précieuses</div>
+          <p class="exp-fd">Nos soins utilisent exclusivement des huiles végétales bio et des essences rares sélectionnées pour leurs vertus exceptionnelles.</p>
+        </div>
+      </div>
+      <div class="exp-feat">
+        <div class="exp-ico">🌸</div>
+        <div>
+          <div class="exp-ft">Expertise Certifiée</div>
+          <p class="exp-fd">Nos masseuses sont formées aux meilleures techniques internationales pour vous offrir une expérience irréprochable.</p>
+        </div>
+      </div>
+      <div class="exp-feat">
+        <div class="exp-ico">✨</div>
+        <div>
+          <div class="exp-ft">Cadre de Luxe</div>
+          <p class="exp-fd">Un espace intimiste sublimé — musique, luminosité, températures et ambiances olfactives pensées dans les moindres détails.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- TARIFS -->
+<section class="sec" id="tarifs">
+  <div class="reveal">
+    <p class="s-label">✦ Nos Forfaits ✦</p>
+    <h2 class="s-title">Offres Diamond</h2>
+    <p class="s-sub">Choisissez l'expérience qui correspond à votre désir de luxe et de bien-être.</p>
+  </div>
+  <div class="tarifs-grid reveal">
+    <div class="t-card">
+      <div class="t-name">Pink Escape</div>
+      <div class="t-price">75€</div>
+      <div class="t-unit">1 heure</div>
+      <ul class="t-feats">
+        <li>1 massage au choix</li>
+        <li>Huiles végétales bio</li>
+        <li>Musique thérapeutique</li>
+        <li>Tisane offerte</li>
+      </ul>
+      <a href="#reservation" class="btn-s" style="font-size:.65rem;padding:12px 28px;">Réserver</a>
+    </div>
+    <div class="t-card feat">
+      <div class="t-badge">Le Plus Choisi</div>
+      <div class="t-name">Diamond Experience</div>
+      <div class="t-price">115€</div>
+      <div class="t-unit">1h30 · Le plus populaire</div>
+      <ul class="t-feats">
+        <li>1 massage premium</li>
+        <li>Huiles aux pierres précieuses</li>
+        <li>Rituel aromatique</li>
+        <li>Tisane &amp; petits délices</li>
+        <li>Serviettes chauffées</li>
+      </ul>
+      <a href="#reservation" class="btn-p" style="font-size:.65rem;padding:12px 28px;">Réserver</a>
+    </div>
+    <div class="t-card">
+      <div class="t-name">Pure Luxury</div>
+      <div class="t-price">150€</div>
+      <div class="t-unit">2 heures</div>
+      <ul class="t-feats">
+        <li>2 massages combinés</li>
+        <li>Huiles d'exception</li>
+        <li>Enveloppement corps</li>
+        <li>Collation luxueuse</li>
+        <li>Espace détente privé</li>
+      </ul>
+      <a href="#reservation" class="btn-s" style="font-size:.65rem;padding:12px 28px;">Réserver</a>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- AVIS -->
+<section class="sec" id="avis" style="background:linear-gradient(to bottom,transparent,rgba(194,24,91,.03),transparent);">
+  <div class="reveal">
+    <p class="s-label">✦ Elles Témoignent ✦</p>
+    <h2 class="s-title">L'Avis de Nos Diamants</h2>
+    <p class="s-sub">Des expériences qui transforment, des mots qui touchent.</p>
+  </div>
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-q">"</div>
+      <p class="testi-txt">Un véritable voyage sensoriel. Dès que je suis entrée dans l'espace Pink Diamond, j'ai senti que cette expérience allait être inoubliable. Le massage aux pierres chaudes m'a complètement transportée.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-auth">— Sophia M., Paris</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-q">"</div>
+      <p class="testi-txt">Je n'avais jamais vécu quelque chose d'aussi raffiné. Le massage californien a dissipé des mois de stress en une seule séance. Les mains de votre masseuse sont vraiment magiques.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-auth">— Isabelle C., Lyon</div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-q">"</div>
+      <p class="testi-txt">Le forfait Diamond Experience est absolument parfait. L'ambiance, les huiles, la musique... tout est à la hauteur du nom. Je reviendrai chaque mois sans hésitation.</p>
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-auth">— Amandine V., Bordeaux</div>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- CONTACT -->
+<section class="sec" id="contact">
+  <div class="reveal">
+    <p class="s-label">✦ Nous Contacter ✦</p>
+    <h2 class="s-title">Restons en Contact</h2>
+    <p class="s-sub">Disponible pour toutes vos questions et demandes de renseignements.</p>
+  </div>
+  <div class="contact-block reveal">
+    <div class="c-item">
+      <span class="c-emoji">✈️</span>
+      <div class="c-label">Telegram</div>
+      <div class="c-val">
+        <a href="https://t.me/pinkdiamondaxelle" target="_blank">@pinkdiamondaxelle</a><br>
+        <small style="color:rgba(255,255,255,.3);font-size:.65rem;">Réponse rapide garantie</small>
+      </div>
+    </div>
+    <div class="c-item">
+      <span class="c-emoji">📞</span>
+      <div class="c-label">Téléphone</div>
+      <div class="c-val">
+        <a href="tel:+33675615689">+33 6 75 61 56 89</a><br>
+        <small style="color:rgba(255,255,255,.3);font-size:.65rem;">Lun – Sam · 9h – 20h</small>
+      </div>
+    </div>
+    <div class="c-item">
+      <span class="c-emoji">✉️</span>
+      <div class="c-label">Email</div>
+      <div class="c-val">
+        <a href="mailto:Axellemassages@gmail.com">Axellemassages@gmail.com</a><br>
+        <small style="color:rgba(255,255,255,.3);font-size:.65rem;">Réponse sous 24h</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="div-line"></div>
+
+<!-- RESERVATION -->
+<section class="sec" id="reservation">
+  <div class="reveal">
+    <p class="s-label">✦ Votre Moment ✦</p>
+    <h2 class="s-title">Réserver votre Rituel</h2>
+    <p class="s-sub">Offrez-vous l'expérience Pink Diamond. Chaque réservation est une promesse de luxe absolu.</p>
+  </div>
+  <div class="res-inner reveal">
+    <p class="s-label" style="margin-bottom:6px;">Formulaire de Réservation</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;color:rgba(255,255,255,.38);font-size:.92rem;margin-bottom:0;">Nous vous confirmerons votre rendez-vous sous 24h</p>
+    <div class="form-grid">
+      <div><input id="f-prenom" type="text" class="fi" placeholder="Prénom *"></div>
+      <div><input id="f-nom" type="text" class="fi" placeholder="Nom *"></div>
+      <div><input id="f-email" type="email" class="fi" placeholder="Email"></div>
+      <div><input id="f-tel" type="tel" class="fi" placeholder="Téléphone"></div>
+      <div class="full">
+        <select id="f-soin" class="fs">
+          <option value="" disabled selected>Choisir votre soin *</option>
+          <option>Massage Californien – 75€ / 1h</option>
+          <option>Massage Suédois – 75€ / 1h</option>
+          <option>Massage Shiatsu – 75€ / 1h</option>
+          <option>Massage aux Bambous – 75€ / 1h</option>
+          <option>Massage aux Pierres Chaudes – 75€ / 1h</option>
+          <option>Multi Modelage Relaxation – 75€ / 1h</option>
+          <option>Massage Prénatal – 75€ / 1h</option>
+          <option>Réflexologie – 75€ / 1h</option>
+          <option>Forfait Diamond Experience – 115€ / 1h30</option>
+          <option>Forfait Pure Luxury – 150€ / 2h</option>
+        </select>
+      </div>
+      <div><input id="f-date" type="date" class="fi"></div>
+      <div>
+        <select id="f-heure" class="fs">
+          <option value="" disabled selected>Créneau horaire *</option>
+          <option>10h00</option>
+          <option>11h30</option>
+          <option>14h00</option>
+          <option>15h30</option>
+          <option>17h00</option>
+          <option>18h30</option>
+        </select>
+      </div>
+      <div class="full">
+        <textarea id="f-msg" class="ft" placeholder="Précisions ou demandes particulières…"></textarea>
+      </div>
+    </div>
+    <button class="btn-p" style="width:100%;font-size:.72rem;" onclick="envoyer()">
+      Confirmer ma Réservation ✦
+    </button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="f-logo">PINK DIAMOND</div>
+      <p class="f-tag">L'art du massage, sublimé en rituel de beauté. Parce que vous le méritez.</p>
+      <div class="f-social">
+        <a class="f-soc" href="https://t.me/pinkdiamondaxelle" target="_blank" title="Telegram">✈️</a>
+        <a class="f-soc" href="mailto:Axellemassages@gmail.com" title="Email">✉️</a>
+        <a class="f-soc" href="tel:+33675615689" title="Appeler">📞</a>
+      </div>
+    </div>
+    <div>
+      <div class="f-col-title">Nos Soins</div>
+      <ul class="f-links">
+        <li><a href="#services">Massage Californien</a></li>
+        <li><a href="#services">Massage Suédois</a></li>
+        <li><a href="#services">Massage Shiatsu</a></li>
+        <li><a href="#services">Pierres Chaudes</a></li>
+        <li><a href="#services">Prénatal</a></li>
+        <li><a href="#services">Réflexologie</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-title">Informations</div>
+      <ul class="f-links">
+        <li><a href="#experience">Notre Promesse</a></li>
+        <li><a href="#tarifs">Nos Forfaits</a></li>
+        <li><a href="#avis">Avis Clients</a></li>
+        <li><a href="#contact">Nous Contacter</a></li>
+        <li><a href="#reservation">Réserver</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="f-col-title">Contact</div>
+      <ul class="f-links">
+        <li><a href="https://t.me/pinkdiamondaxelle" target="_blank">✈️ Telegram : @pinkdiamondaxelle</a></li>
+        <li><a href="tel:+33675615689">📞 +33 6 75 61 56 89</a></li>
+        <li><a href="mailto:Axellemassages@gmail.com">✉️ Axellemassages@gmail.com</a></li>
+        <li><a href="#reservation">🕐 Lun–Sam · 9h–20h</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="f-bot">
+    <span class="f-bot-txt">© 2026 PINK DIAMOND · Institut de Massage de Luxe</span>
+    <span class="f-bot-txt">✦ Fait avec amour ✦</span>
+  </div>
+</footer>
+
+<script>
+// CURSOR
+const cur = document.getElementById('cur');
+const ring = document.getElementById('cur-ring');
+let mx=0, my=0, rx=0, ry=0;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cur.style.left = mx + 'px';
+  cur.style.top = my + 'px';
+});
+(function anim() {
+  rx += (mx - rx) * .12;
+  ry += (my - ry) * .12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(anim);
+})();
+document.querySelectorAll('a, button, .s-card, .t-card, .c-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cur.style.transform = 'translate(-50%,-50%) scale(2)';
+    ring.style.borderColor = 'rgba(232,98,138,.8)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cur.style.transform = 'translate(-50%,-50%) scale(1)';
+    ring.style.borderColor = 'rgba(232,98,138,.5)';
+  });
+});
+
+// GLITTER
+const canvas = document.getElementById('gc');
+const ctx = canvas.getContext('2d');
+let W, H, pts = [];
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+
+function Pt() {
+  this.reset = function() {
+    this.x = Math.random() * W;
+    this.y = Math.random() * H;
+    this.r = Math.random() * 2 + .4;
+    this.vy = -(Math.random() * .35 + .08);
+    this.vx = (Math.random() - .5) * .25;
+    this.life = 0;
+    this.max = Math.random() * 180 + 80;
+    this.c = Math.random() > .5 ? '#e8628a' : '#f9c8d9';
+    this.sq = Math.random() > .6;
+  };
+  this.reset();
+  this.life = Math.floor(Math.random() * this.max);
+  this.draw = function() {
+    this.life++;
+    const p = this.life / this.max;
+    const a = p < .2 ? p * 5 : p > .8 ? (1 - p) * 5 : 1;
+    ctx.save();
+    ctx.globalAlpha = a * .55;
+    ctx.fillStyle = this.c;
+    ctx.shadowColor = this.c;
+    ctx.shadowBlur = 5;
+    if (this.sq) {
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.life * .025);
+      ctx.fillRect(-this.r, -this.r, this.r * 2, this.r * 2);
+    } else {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.life >= this.max) this.reset();
+  };
+}
+for (let i = 0; i < 160; i++) pts.push(new Pt());
+(function loop() {
+  ctx.clearRect(0, 0, W, H);
+  pts.forEach(p => p.draw());
+  requestAnimationFrame(loop);
+})();
+
+// SCROLL REVEAL
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: .1 });
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// CLICK BURST
+document.addEventListener('click', e => {
+  for (let i = 0; i < 8; i++) {
+    const b = document.createElement('div');
+    b.style.cssText = 'position:fixed;left:' + e.clientX + 'px;top:' + e.clientY + 'px;width:5px;height:5px;background:' + (Math.random() > .5 ? '#e8628a' : '#fff') + ';border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)';
+    document.body.appendChild(b);
+    const ang = (i / 8) * Math.PI * 2;
+    const d = 38 + Math.random() * 28;
+    b.animate([
+      { transform: 'translate(-50%,-50%) scale(1)', opacity: 1 },
+      { transform: 'translate(calc(-50% + ' + (Math.cos(ang) * d) + 'px),calc(-50% + ' + (Math.sin(ang) * d) + 'px)) scale(0)', opacity: 0 }
+    ], { duration: 480, easing: 'ease-out' }).onfinish = function() { b.remove(); };
+  }
+});
+
+// RESERVATION → MAILTO
+function envoyer() {
+  const pr = document.getElementById('f-prenom').value.trim();
+  const no = document.getElementById('f-nom').value.trim();
+  const em = document.getElementById('f-email').value.trim();
+  const te = document.getElementById('f-tel').value.trim();
+  const so = document.getElementById('f-soin').value;
+  const da = document.getElementById('f-date').value;
+  const he = document.getElementById('f-heure').value;
+  const ms = document.getElementById('f-msg').value.trim();
+  if (!pr || !no || !so || !da || !he) {
+    alert('✦ Merci de remplir les champs obligatoires : prénom, nom, soin, date et créneau. ✦');
+    return;
+  }
+  const subj = encodeURIComponent('Reservation Pink Diamond - ' + pr + ' ' + no);
+  const body = encodeURIComponent(
+    'NOUVELLE RESERVATION PINK DIAMOND\n\n' +
+    'Client : ' + pr + ' ' + no + '\n' +
+    'Email : ' + (em || 'Non renseigne') + '\n' +
+    'Telephone : ' + (te || 'Non renseigne') + '\n\n' +
+    'Soin choisi : ' + so + '\n' +
+    'Date souhaitee : ' + da + '\n' +
+    'Creneau : ' + he + '\n\n' +
+    'Message :\n' + (ms || 'Aucune precision') + '\n\n' +
+    'Reservation via le site Pink Diamond'
+  );
+  window.location.href = 'mailto:Axellemassages@gmail.com?subject=' + subj + '&body=' + body;
+}
+</script>
+</body>
+</html>
